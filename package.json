@@ -1,0 +1,55 @@
+{
+  "name": "deepseek-desktop",
+  "productName": "DeepSeek Harness",
+  "version": "1.0.0",
+  "description": "DeepSeek Harness as a native macOS desktop app",
+  "main": "src/main.js",
+  "author": "codeyu",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "node scripts/smoke.js",
+    "pack": "electron-builder --mac dir",
+    "dist": "electron-builder --mac"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.1.0-rc.6"
+  },
+  "devDependencies": {
+    "electron": "43.4.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.codeyu.deepseek-desktop",
+    "productName": "DeepSeek Harness",
+    "asar": false,
+    "npmRebuild": false,
+    "electronDist": "node_modules/electron/dist",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "!**/*.map"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "build/icon.icns",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "target": [
+        "zip"
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    }
+  },
+  "allowScripts": {
+    "@deepseek-ai/dsh-subprocess-local@0.1.0-rc.6": true,
+    "@google/genai@1.52.0": true,
+    "koffi@3.1.5": true,
+    "node-pty@1.1.0": true,
+    "protobufjs@7.6.5": true
+  }
+}
