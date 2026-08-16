@@ -9,8 +9,8 @@
   "scripts": {
     "start": "electron .",
     "smoke": "node scripts/smoke.js",
-    "pack": "electron-builder --mac dir",
-    "dist": "electron-builder --mac"
+    "pack": "electron-builder --mac dir --publish never",
+    "dist": "electron-builder --mac --publish never"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.0-rc.6"
