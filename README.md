@@ -94,6 +94,7 @@ App 图标使用 DeepSeek 官方鲸鱼标（`build/deepseek-whale.png`，取自�
 
 - **`asar: false`**：把 `node_modules` 原样解包到 `Contents/Resources/app/` 下，这样 `dsh` 及其全部依赖都能被系统 Node 直接解析执行。
 - **`npmRebuild: false`**：阻止 electron-builder 把原生 addon 重建为 Electron ABI——我们要的是系统 Node 的 ABI。
+- **显式声明 peer 依赖**：harness 各包之间有一批 `peerDependencies`（如 `cordis-plugin-group`、`dsh-invariants`、`dsh-fs` 等 19 个），electron-builder 的收集器只认 `dependencies`/`optionalDependencies` 会漏掉它们，导致打包后的 App 启动报 `ERR_MODULE_NOT_FOUND`。因此这些包被显式加进了 `package.json` 的 `dependencies`。
 - **动态端口**：`dsh web --host 127.0.0.1 --port 0` 让 OS 分配空闲端口，从 stdout 的 `dsh web: http://127.0.0.1:<port>` 行解析真实地址，再等待 HTTP 就绪——避免与正在运行的命令行实例（默认 3080）冲突。
 - **单实例**：`app.requestSingleInstanceLock()`，二次启动只聚焦已有窗口，不会重复起服务。
 
