@@ -3,9 +3,13 @@ name: build
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -39,3 +43,21 @@ jobs:
             dist/*.dmg
             dist/*.zip
           if-no-files-found: error
+
+      - name: Publish release
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            # Versioned release for a v* tag.
+            gh release create "$GITHUB_REF_NAME" dist/*.dmg dist/*.zip --generate-notes
+          else
+            # Rolling "latest" prerelease updated on every main push.
+            gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+            gh release create latest dist/*.dmg dist/*.zip \
+              --title "DeepSeek Harness (latest)" \
+              --notes "Rolling macOS build from commit ${GITHUB_SHA:0:7} — \`.dmg\` + \`.zip\` (ad-hoc signed)." \
+              --prerelease --target "$GITHUB_SHA"
+          fi
