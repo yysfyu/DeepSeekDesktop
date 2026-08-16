@@ -7,7 +7,7 @@ dist/
 .DS_Store
 *.log
 
-# Generated icon artifacts — regenerate with scripts/build_icon.sh
-build/icon.icns
+# Intermediate icon artifacts — regenerate with scripts/build_icon.sh.
+# build/icon.icns is committed so clones/CI can build without Python + Pillow.
 build/icon_1024.png
 build/icon.iconset/

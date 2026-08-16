@@ -1,5 +1,7 @@
 # 🐋 DeepSeek Harness Desktop
 
+[![build](https://github.com/yysfyu/DeepSeekDesktop/actions/workflows/build.yml/badge.svg)](https://github.com/yysfyu/DeepSeekDesktop/actions/workflows/build.yml)
+
 把 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`@deepseek-ai/dsh`）打包成 macOS 桌面端 App。基于 Electron，启动后：
 
 1. 用 **系统 Node** 启动 `dsh web`（监听 127.0.0.1，端口由系统自动分配，避免冲突）；
@@ -83,6 +85,10 @@ App 默认与命令行版 **共用 `~/.dsh`**，因此已配置的 API 凭据、
 App 图标使用 DeepSeek 官方鲸鱼标（`build/deepseek-whale.png`，取自官方 `https://cdn.deepseek.com/chat/icon.png`），由 `scripts/gen_icon.py` 白底居中合成。
 
 本项目未使用 Apple 开发者证书，产物为 ad-hoc 签名；他人 Mac 首次打开需 **右键 → 打开**（Gatekeeper 拦截提示下），或用开发者证书重新签名 + 公证。
+
+## CI / GitHub Actions
+
+`.github/workflows/build.yml` 在 push 到 `main`、发 PR、或手动触发时，用 `macos-latest`（Apple Silicon）自动跑：安装依赖 → 冒烟测试 → 构建 `.app` + `.zip` → 生成 `.dmg`，产物上传到 Actions 的 Artifacts。构建状态见仓库顶部 badge。
 
 ## 实现要点
 

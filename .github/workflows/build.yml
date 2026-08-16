@@ -1,0 +1,41 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: ./scripts/install.sh
+
+      - name: Smoke test (boot the harness)
+        run: npm run smoke
+
+      - name: Build .app + zip (ad-hoc signed)
+        run: npm run dist
+
+      - name: Build DMG
+        run: ./scripts/make_dmg_only.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeepSeek-Harness-macOS
+          path: |
+            dist/*.dmg
+            dist/*.zip
+          if-no-files-found: error
